@@ -8,7 +8,7 @@ namespace Models
         public required string IP { get; set; }
 
         [JsonPropertyName("hostname")]
-        public required string HostName { get; set; }
+        public string? HostName { get; set; }
 
         [JsonPropertyName("city")]
         public required string City { get; set; }

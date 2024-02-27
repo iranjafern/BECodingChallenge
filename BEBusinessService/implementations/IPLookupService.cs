@@ -4,42 +4,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace BEBusinessService.implementations
 {
     public class IPLookupService : IIPLookupService
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient httpClient;
+        private const string _baseUrl = "https://ipinfo.io/";
+        private const string _token = "54b075ffd917a7";
 
-        public IPLookupService(IHttpClientFactory httpClientFactory)
+        public IPLookupService(HttpClient httpClient)
         {
-            _httpClientFactory = httpClientFactory;
+            this.httpClient = httpClient;
         }
         
         async Task<CityLocation> IIPLookupService.GetIPLookUp(string ipAddress)
         {
-            CityLocation cityLocation = new CityLocation();
-            string url = "https://ipinfo.io/" + ipAddress + "?token=54b075ffd917a7";
+            string url = string.Concat(_baseUrl, ipAddress, "?token=", _token);
+            var cityLocation = new CityLocation();
+            var httpResponseMessage = await httpClient.GetAsync(url);
+            var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
+            var ipLookUp = JsonSerializer.Deserialize<IPLookUp>(responseContent);
 
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+            if (ipLookUp != null)
+                cityLocation = new CityLocation { City = ipLookUp.City, Loc = ipLookUp.Loc };
 
-            var httpClient = _httpClientFactory.CreateClient();
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-
-            if (httpResponseMessage.IsSuccessStatusCode)
-            {
-                using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
-
-                var ipLookUp = await JsonSerializer.DeserializeAsync<IPLookUp>(contentStream);
-                
-                if (ipLookUp != null)
-                  cityLocation = new CityLocation { City = ipLookUp.City, Loc = ipLookUp.Loc };
-            }
-
-            //IPLookUp ipLookUp = new IPLookUp { City = "Test", HostName= "", Country = "", IP = "", Org = "", Loc = "", Postal = "", Region = "" };
             return await Task.FromResult(cityLocation);
         }
     }
