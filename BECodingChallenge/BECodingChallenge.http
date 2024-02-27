@@ -1,0 +1,6 @@
+@BECodingChallenge_HostAddress = http://localhost:5228
+
+GET {{BECodingChallenge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
