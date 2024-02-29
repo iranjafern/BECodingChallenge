@@ -1,3 +1,5 @@
+This project has the following 3 endpoints,
+
 Get candidate API
 http://localhost:5228/api/BEAPI/candidate
 
