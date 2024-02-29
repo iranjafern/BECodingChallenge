@@ -28,7 +28,12 @@ namespace BEBusinessService.implementations
             var ipLookUp = JsonSerializer.Deserialize<IPLookUp>(responseContent);
 
             if (ipLookUp != null)
-                cityLocation = new CityLocation { City = ipLookUp.City, Loc = ipLookUp.Loc };
+            {
+                if(string.IsNullOrEmpty(ipLookUp.Bogon))
+                    cityLocation = new CityLocation { City = ipLookUp.City, Loc = ipLookUp.Loc, IsValidIP = true };
+                else
+                    cityLocation = new CityLocation { City = string.Empty, Loc = "", IsValidIP = false };
+            }
 
             return await Task.FromResult(cityLocation);
         }

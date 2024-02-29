@@ -11,10 +11,10 @@ namespace Models
         public string? HostName { get; set; }
 
         [JsonPropertyName("city")]
-        public required string City { get; set; }
+        public string? City { get; set; }
 
         [JsonPropertyName("region")]
-        public required string Region { get; set; }
+        public string? Region { get; set; }
 
         [JsonPropertyName("country")]
         public string? Country { get; set; }
@@ -30,5 +30,8 @@ namespace Models
 
         [JsonPropertyName("timezone")]
         public string? Timezone { get; set; }
+
+        [JsonPropertyName("bogon")]
+        public string? Bogon { get; set; }
     }
 }

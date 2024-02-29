@@ -8,6 +8,9 @@ namespace Models
         public string? City { get; set; }
 
         [JsonPropertyName("loc")]
-        public string? Loc { get; set; }        
+        public string? Loc { get; set; }
+
+        [JsonPropertyName("isValidIP")]
+        public bool IsValidIP { get; set; }
     }
 }
