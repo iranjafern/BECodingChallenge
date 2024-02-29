@@ -25,22 +25,6 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<HttpResponseExceptionFilter>();
 });
 
-builder.Services.AddControllers()
-    .ConfigureApiBehaviorOptions(options =>
-    {
-        options.InvalidModelStateResponseFactory = context =>
-            new BadRequestObjectResult(context.ModelState)
-            {
-                ContentTypes =
-                {
-                    // using static System.Net.Mime.MediaTypeNames;
-                    Application.Json,
-                    Application.Xml
-                }
-            };
-    })
-    .AddXmlSerializerFormatters();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

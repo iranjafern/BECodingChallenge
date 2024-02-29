@@ -4,14 +4,10 @@ using System.Text.Json;
 
 namespace BEBusinessService.implementations
 {
-    public class QuotationService : IQuotationService
+    public class QuotationService(HttpClient httpClient) : IQuotationService
     {
-        private readonly HttpClient httpClient;
+        private readonly HttpClient httpClient = httpClient;
         private const string _baseUrl = "https://jayridechallengeapi.azurewebsites.net/api/QuoteRequest";
-        public QuotationService(HttpClient httpClient)
-        {
-            this.httpClient = httpClient;
-        }
 
         async Task<TotalPassangers> IQuotationService.GetPassengersWithTotal(int nuberOfPassagers)
         {
