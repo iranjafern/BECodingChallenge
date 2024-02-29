@@ -71,11 +71,5 @@ namespace BECodingChallenge.Controllers
         [Route("/error")]
         public IActionResult HandleError() =>
             Problem();
-    }
-
-    enum MathErrorType
-    {
-        DivisionByZeroError,
-        NegativeRadicandError
-    }
+    }    
 }
