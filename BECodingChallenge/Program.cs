@@ -1,6 +1,9 @@
 using BEBusinessService.implementations;
 using BEBusinessService.interfaces;
+using BECodingChallenge.HttpResponse;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,27 @@ builder.Services.AddTransient<IIPLookupService, IPLookupService>();
 builder.Services.AddTransient<IQuotationService, QuotationService>();
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+});
+
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+            new BadRequestObjectResult(context.ModelState)
+            {
+                ContentTypes =
+                {
+                    // using static System.Net.Mime.MediaTypeNames;
+                    Application.Json,
+                    Application.Xml
+                }
+            };
+    })
+    .AddXmlSerializerFormatters();
 
 var app = builder.Build();
 
