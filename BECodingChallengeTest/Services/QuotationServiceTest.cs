@@ -12,11 +12,29 @@ namespace BECodingChallengeTest.Services
     {
         private readonly Mock<HttpMessageHandler>  handlerMock = new Mock<HttpMessageHandler>();
         [Test]
-        public async Task GetIPLookUpTest()
+        public async Task QuotationPassTest()
         {
-            var cityLocation = await SetupTest().GetPassengersWithTotal(3);
+            string quatationJsonString = @"{""from"":""Sydney Airport (SYD), T1 International Terminal"",""to"":""46 Church Street, Parramatta NSW, Australia"",""listings"":[{""name"":""Listing 1"",""pricePerPassenger"":47.82,""vehicleType"":{""name"":""Hatchback"",""maxPassengers"":3}}]}";
 
-            Assert.NotNull(cityLocation);
+            var cityLocation = await SetupTest(quatationJsonString).GetPassengersWithTotal(3);
+
+            Assert.NotNull(cityLocation.Passengers);
+            Assert.That(cityLocation.Total, Is.EqualTo(47.82));
+            handlerMock.Protected().Verify(
+              "SendAsync",
+              Times.Exactly(1),
+              ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
+              ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Test]
+        public async Task QuotationNoResultsTest()
+        {
+            string quatationJsonString = @"{""from"":""Sydney Airport (SYD), T1 International Terminal"",""to"":""46 Church Street, Parramatta NSW, Australia"",""listings"":[{""name"":""Listing 1"",""pricePerPassenger"":47.82,""vehicleType"":{""name"":""Hatchback"",""maxPassengers"":3}}]}";
+
+            var cityLocation = await SetupTest(quatationJsonString).GetPassengersWithTotal(2);
+
+            Assert.That(cityLocation.Passengers.Count, Is.EqualTo(0));
             handlerMock.Protected().Verify(
               "SendAsync",
               Times.Exactly(1),
@@ -28,12 +46,12 @@ namespace BECodingChallengeTest.Services
         /// Mock QuotationService
         /// </summary>
         /// <returns>QuotationService</returns>
-        private IQuotationService SetupTest()
+        private IQuotationService SetupTest(string quatationJsonString)
         {
             var response = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(@"[{""from"":""Sydney Airport (SYD), T1 International Terminal"",""to"":""46 Church Street, Parramatta NSW, Australia"",""listings"":[{""name"":""Listing 1"",""pricePerPassenger"":47.82,""vehicleType"":{""name"":""Hatchback"",""maxPassengers"":2}}]}]")
+                Content = new StringContent(quatationJsonString)
             };
 
             handlerMock
