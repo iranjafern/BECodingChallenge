@@ -7,14 +7,9 @@ namespace BEBusinessService.implementations
 {
     public class IPLookupService(HttpClient httpClient, IConfiguration configuration) : IIPLookupService
     {
-        private readonly HttpClient httpClient = httpClient;
-        private readonly IConfiguration Configuration = configuration;
-        
         async Task<CityLocation> IIPLookupService.GetIPLookUp(string ipAddress)
         {
-            var baseUrl = configuration.GetValue<string>("IPLookup:BaseURL");
-            var token = configuration.GetValue<string>("IPLookup:Token");
-            string url = string.Concat(baseUrl, ipAddress, "?token=", token);
+            string url = string.Concat(configuration.GetValue<string>("IPLookup:BaseURL"), ipAddress, "?token=", configuration.GetValue<string>("IPLookup:Token"));
             var cityLocation = new CityLocation();
             var httpResponseMessage = await httpClient.GetAsync(url);
             var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();

@@ -1,5 +1,6 @@
 using BEBusinessService.implementations;
 using BEBusinessService.interfaces;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
 using System.Net;
@@ -29,8 +30,6 @@ namespace BECodingChallengeTest.Services
         /// <returns>QuotationService</returns>
         private IQuotationService SetupTest()
         {
-            //handlerMock = new Mock<HttpMessageHandler>();
-
             var response = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
@@ -45,7 +44,19 @@ namespace BECodingChallengeTest.Services
                 ItExpr.IsAny<CancellationToken>())
               .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            return new QuotationService(httpClient);            
+
+            var configurationQuatationUrlSectionMock = new Mock<IConfigurationSection>();            
+            var configurationMock = new Mock<IConfiguration>();
+
+            configurationQuatationUrlSectionMock
+               .Setup(x => x.Value)
+               .Returns("https://jayridechallengeapi.azurewebsites.net/api/QuoteRequest");
+
+            configurationMock
+               .Setup(x => x.GetSection("QuotationService:URL"))
+               .Returns(configurationQuatationUrlSectionMock.Object);            
+
+            return new QuotationService(httpClient, configurationMock.Object);            
         }
     }
 }
