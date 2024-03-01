@@ -1,5 +1,6 @@
 using BEBusinessService.implementations;
 using BEBusinessService.interfaces;
+using Microsoft.Extensions.Configuration;
 using Models;
 using Moq;
 using Moq.Protected;
@@ -51,8 +52,6 @@ namespace BECodingChallengeTest.Services
         /// <returns>IPLookupService</returns>
         private IIPLookupService SetupTest(string ipLookUpJsonString)
         {
-            
-
             var response = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
@@ -67,7 +66,28 @@ namespace BECodingChallengeTest.Services
                 ItExpr.IsAny<CancellationToken>())
               .ReturnsAsync(response);
             var httpClient = new HttpClient(handlerMock.Object);
-            return new IPLookupService(httpClient);            
+
+            var configurationBaseUrlSectionMock = new Mock<IConfigurationSection>();
+            var configurationTokenSectionMock = new Mock<IConfigurationSection>();
+            var configurationMock = new Mock<IConfiguration>();
+
+            configurationBaseUrlSectionMock
+               .Setup(x => x.Value)
+               .Returns("https://ipinfo.io/");
+
+            configurationMock
+               .Setup(x => x.GetSection("IPLookup:BaseURL"))
+               .Returns(configurationBaseUrlSectionMock.Object);
+
+            configurationTokenSectionMock
+               .Setup(x => x.Value)
+               .Returns("54b075ffd917a7");
+
+            configurationMock
+               .Setup(x => x.GetSection("IPLookup:Token"))
+               .Returns(configurationTokenSectionMock.Object);
+
+            return new IPLookupService(httpClient, configurationMock.Object);            
         }
     }
 }

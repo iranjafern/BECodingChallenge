@@ -1,22 +1,20 @@
 ﻿using BEBusinessService.interfaces;
+using Microsoft.Extensions.Configuration;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace BEBusinessService.implementations
 {
-    public class IPLookupService(HttpClient httpClient) : IIPLookupService
+    public class IPLookupService(HttpClient httpClient, IConfiguration configuration) : IIPLookupService
     {
         private readonly HttpClient httpClient = httpClient;
-        private const string _baseUrl = "https://ipinfo.io/";
-        private const string _token = "54b075ffd917a7";
-
+        private readonly IConfiguration Configuration = configuration;
+        
         async Task<CityLocation> IIPLookupService.GetIPLookUp(string ipAddress)
         {
-            string url = string.Concat(_baseUrl, ipAddress, "?token=", _token);
+            var baseUrl = configuration.GetValue<string>("IPLookup:BaseURL");
+            var token = configuration.GetValue<string>("IPLookup:Token");
+            string url = string.Concat(baseUrl, ipAddress, "?token=", token);
             var cityLocation = new CityLocation();
             var httpResponseMessage = await httpClient.GetAsync(url);
             var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
