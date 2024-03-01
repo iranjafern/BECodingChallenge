@@ -1,7 +1,6 @@
 using BEBusinessService.implementations;
 using BEBusinessService.interfaces;
 
-
 namespace BECodingChallengeTest.Services
 {
     [TestFixture]

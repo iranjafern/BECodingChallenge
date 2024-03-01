@@ -18,8 +18,12 @@ namespace BECodingChallengeTest.Services
 
             var cityLocation = await SetupTest(quatationJsonString).GetPassengersWithTotal(3);
 
-            Assert.NotNull(cityLocation.Passengers);
-            Assert.That(cityLocation.Total, Is.EqualTo(47.82));
+            Assert.Multiple(() =>
+            {
+                Assert.That(cityLocation.Passengers, Is.Not.Null);
+                Assert.That(cityLocation.Total, Is.EqualTo(47.82));
+            });
+
             handlerMock.Protected().Verify(
               "SendAsync",
               Times.Exactly(1),
@@ -34,7 +38,7 @@ namespace BECodingChallengeTest.Services
 
             var cityLocation = await SetupTest(quatationJsonString).GetPassengersWithTotal(2);
 
-            Assert.That(cityLocation.Passengers.Count, Is.EqualTo(0));
+            Assert.That(cityLocation.Passengers, Is.Empty);
             handlerMock.Protected().Verify(
               "SendAsync",
               Times.Exactly(1),
