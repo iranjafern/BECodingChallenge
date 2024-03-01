@@ -10,7 +10,7 @@ namespace BEBusinessService.implementations
         async Task<TotalPassangers> IQuotationService.GetPassengersWithTotal(int nuberOfPassagers)
         {
             var totalPassangers = new TotalPassangers();
-            var httpResponseMessage = await httpClient.GetAsync(configuration.GetValue<string>("IPLookup:BaseURL"));
+            var httpResponseMessage = await httpClient.GetAsync(configuration.GetValue<string>("QuotationService:URL"));
             var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
             var quote = JsonSerializer.Deserialize<Quote>(responseContent);
 
