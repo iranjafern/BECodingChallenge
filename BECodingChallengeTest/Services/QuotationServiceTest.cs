@@ -12,7 +12,7 @@ namespace BECodingChallengeTest.Services
     {
         private readonly Mock<HttpMessageHandler>  handlerMock = new Mock<HttpMessageHandler>();
         [Test]
-        public async Task QuotationPassTest()
+        public async Task GetPassengersWithTotal_When_Number_Of_Passengers_Matching_Test()
         {
             string quatationJsonString = @"{""from"":""Sydney Airport (SYD), T1 International Terminal"",""to"":""46 Church Street, Parramatta NSW, Australia"",""listings"":[{""name"":""Listing 1"",""pricePerPassenger"":47.82,""vehicleType"":{""name"":""Hatchback"",""maxPassengers"":3}}]}";
 
@@ -32,7 +32,7 @@ namespace BECodingChallengeTest.Services
         }
 
         [Test]
-        public async Task QuotationNoResultsTest()
+        public async Task GetPassengersWithTotal_When_Number_Of_Passengers_Not_Matching_Test()
         {
             string quatationJsonString = @"{""from"":""Sydney Airport (SYD), T1 International Terminal"",""to"":""46 Church Street, Parramatta NSW, Australia"",""listings"":[{""name"":""Listing 1"",""pricePerPassenger"":47.82,""vehicleType"":{""name"":""Hatchback"",""maxPassengers"":3}}]}";
 

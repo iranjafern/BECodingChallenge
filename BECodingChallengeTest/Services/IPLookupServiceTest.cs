@@ -12,7 +12,7 @@ namespace BECodingChallengeTest.Services
     {
         private readonly Mock<HttpMessageHandler>  handlerMock = new Mock<HttpMessageHandler>();
         [Test]
-        public async Task GetIPLookUpPassTest()
+        public async Task GetIPLookUp_When_IP_Address_Available_Test()
         {
             string ipLookUpJsonString = @"{""ip"": ""175.38.82.173"",""hostname"": """",""city"": ""Ballarat"",""region"": ""Victoria"",""country"": """",""loc"": """",""org"": """",""postal"": """",""timezone"": """"}";
 
@@ -29,7 +29,7 @@ namespace BECodingChallengeTest.Services
         }
 
         [Test]
-        public async Task GetIPLookUpFailTest()
+        public async Task GetIPLookUp_When_IP_Address_Not_Available_Test()
         {
             string ipLookUpJsonString = @"{""ip"": ""172.22.22.222"",""bogon"": ""true""}";
 
