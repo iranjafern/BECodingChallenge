@@ -9,19 +9,12 @@ namespace BECodingChallenge.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BEAPIController : ControllerBase
+    public class BEAPIController(ICandidateService candidateService, IIPLookupService ipLookupService, IQuotationService quotationService) : ControllerBase
     {
-        readonly ICandidateService _candidateService;
-        readonly IIPLookupService _ipLookupService;
-        readonly IQuotationService _quotationService;
+        readonly ICandidateService _candidateService = candidateService;
+        readonly IIPLookupService _ipLookupService = ipLookupService;
+        readonly IQuotationService _quotationService = quotationService;
         private const string _ipFormatRegex = @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b";
-        public BEAPIController(ICandidateService candidateService, IIPLookupService ipLookupService, IQuotationService quotationService)
-        {
-            _candidateService = candidateService;
-            _ipLookupService = ipLookupService;
-            _quotationService = quotationService;
-        }
-
 
         [HttpGet]
         [Route("candidate")]
